@@ -13,6 +13,8 @@
 		A640966B1B8D0E51001D6E0A /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A640966A1B8D0E51001D6E0A /* Social.framework */; };
 		A64096711B921EE3001D6E0A /* TweetPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64096701B921EE3001D6E0A /* TweetPostViewController.swift */; };
 		A65A74121BA5A6CC00328E7A /* TwitterServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65A74111BA5A6CC00328E7A /* TwitterServiceManager.swift */; };
+		A65A74141BA5F8D600328E7A /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65A74131BA5F8D600328E7A /* FollowingViewController.swift */; };
+		A65A74161BA5F8F400328E7A /* FollowerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65A74151BA5F8F400328E7A /* FollowerViewController.swift */; };
 		F90107BF1B87007600BB6E11 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90107BE1B87007600BB6E11 /* TimelineViewController.swift */; };
 		F9BB55391B80AC0D008D3323 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BB55381B80AC0D008D3323 /* AppDelegate.swift */; };
 		F9BB553B1B80AC0D008D3323 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BB553A1B80AC0D008D3323 /* ViewController.swift */; };
@@ -39,6 +41,8 @@
 		A640966A1B8D0E51001D6E0A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		A64096701B921EE3001D6E0A /* TweetPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetPostViewController.swift; sourceTree = "<group>"; };
 		A65A74111BA5A6CC00328E7A /* TwitterServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitterServiceManager.swift; sourceTree = "<group>"; };
+		A65A74131BA5F8D600328E7A /* FollowingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingViewController.swift; sourceTree = "<group>"; };
+		A65A74151BA5F8F400328E7A /* FollowerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowerViewController.swift; sourceTree = "<group>"; };
 		F90107BE1B87007600BB6E11 /* TimelineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		F9BB55331B80AC0D008D3323 /* twitter_sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = twitter_sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9BB55371B80AC0D008D3323 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -95,13 +99,15 @@
 		F9BB55351B80AC0D008D3323 /* twitter_sample */ = {
 			isa = PBXGroup;
 			children = (
+				A65A74111BA5A6CC00328E7A /* TwitterServiceManager.swift */,
+				F9BB55381B80AC0D008D3323 /* AppDelegate.swift */,
+				F9BB553A1B80AC0D008D3323 /* ViewController.swift */,
 				A61DE05D1B9A8C77003B93A2 /* ProfileEditViewController.swift */,
 				A6209B591B94C77D000A22A5 /* TweetDetailViewController.swift */,
 				F90107BE1B87007600BB6E11 /* TimelineViewController.swift */,
 				A64096701B921EE3001D6E0A /* TweetPostViewController.swift */,
-				F9BB55381B80AC0D008D3323 /* AppDelegate.swift */,
-				F9BB553A1B80AC0D008D3323 /* ViewController.swift */,
-				A65A74111BA5A6CC00328E7A /* TwitterServiceManager.swift */,
+				A65A74131BA5F8D600328E7A /* FollowingViewController.swift */,
+				A65A74151BA5F8F400328E7A /* FollowerViewController.swift */,
 				F9BB553C1B80AC0D008D3323 /* Main.storyboard */,
 				F9BB553F1B80AC0D008D3323 /* Images.xcassets */,
 				F9BB55411B80AC0D008D3323 /* LaunchScreen.xib */,
@@ -235,6 +241,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A65A74141BA5F8D600328E7A /* FollowingViewController.swift in Sources */,
+				A65A74161BA5F8F400328E7A /* FollowerViewController.swift in Sources */,
 				F9BB553B1B80AC0D008D3323 /* ViewController.swift in Sources */,
 				A65A74121BA5A6CC00328E7A /* TwitterServiceManager.swift in Sources */,
 				F9BB55391B80AC0D008D3323 /* AppDelegate.swift in Sources */,

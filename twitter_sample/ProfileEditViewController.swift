@@ -17,20 +17,21 @@ class ProfileEditViewController: UIViewController {
     @IBOutlet var profileMessageView: UITextView!
     @IBOutlet var sendButton: UIButton!
     
+    var screenName:String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-    
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        self.sendButton.hidden = screenName! != serviceManager.myAccount().username
         
-        serviceManager.fetchProfileByScreenName(serviceManager.myAccount().username, completion: {
+        serviceManager.fetchProfileByScreenName(screenName!, completion: {
             (success, result) -> Void in
             if success {
                 let myStatus:Dictionary<String, AnyObject> = result!
                 
                 var userName = myStatus["name"] as! String
                 var profileMessage = myStatus["description"]as! String
-                var twitterID = "@"+self.serviceManager.myAccount().username
+                var twitterID = "@"+self.screenName!
                 var imageURL = NSURL(string: myStatus["profile_image_url"] as! String)
                 var image = UIImage(data: NSData(contentsOfURL: imageURL!)!)
                 

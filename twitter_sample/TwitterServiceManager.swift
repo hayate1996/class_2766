@@ -16,6 +16,9 @@ class TwitterServiceManager: NSObject {
     var accountStore = ACAccountStore()
     var accounts:[ACAccount]?
     var tweets = []
+    var folloing = []
+    var follower = []
+    var lastFetchedProfile:[String:AnyObject] = [:]
     
     func setId(id:String)
     {
@@ -119,10 +122,83 @@ class TwitterServiceManager: NSObject {
                 }
             }
             else {
-                var results = tweetResponse as! Array<Dictionary<String, AnyObject>>
-                completion(success: true, result: results[0])
+                var result = tweetResponse as! Array<Dictionary<String, AnyObject>>
+                self.lastFetchedProfile = result[0]
+                completion(success: true, result: result[0])
             }
         }
+    }
+    
+    func fetchFriendList(screenName:String, completion:(success:Bool, result:Array<AnyObject>?) -> Void) {
+        let URL = NSURL(string: "https://api.twitter.com/1.1/friends/list.json?screen_name=" + screenName)
+        
+        let request = SLRequest(forServiceType: SLServiceTypeTwitter,
+            requestMethod: .GET,
+            URL: URL,
+            parameters: nil)
+        
+        request.account = myAccount()
+        
+        request.performRequestWithHandler { (data, response, error:NSError?) -> Void in
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            
+            if error != nil {
+                println("Fetching Error: \(error)")
+                return;
+            }
+            
+            var tweetResponse: AnyObject? =  NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments, error: nil)
+            
+            if let tweetDict = tweetResponse as? Dictionary<String, AnyObject>{
+                if let errors = tweetDict["errors"] as? Array<Dictionary<String,AnyObject>>{
+                    completion(success: false, result: errors)
+                }
+                else {
+                    self.folloing = tweetDict["users"] as! Array<AnyObject>
+                    completion(success: true, result: self.folloing as Array<AnyObject>)
+                }
+            }
+            else {
+                completion(success: false, result: nil)
+            }
+        }
+
+    }
+    
+    func fetchFollowerList(screenName:String, completion:(success:Bool, result:Array<AnyObject>?) -> Void) {
+        let URL = NSURL(string: "https://api.twitter.com/1.1/followers/list.json?screen_name=" + screenName)
+        
+        let request = SLRequest(forServiceType: SLServiceTypeTwitter,
+            requestMethod: .GET,
+            URL: URL,
+            parameters: nil)
+        
+        request.account = myAccount()
+        
+        request.performRequestWithHandler { (data, response, error:NSError?) -> Void in
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            
+            if error != nil {
+                println("Fetching Error: \(error)")
+                return;
+            }
+            
+            var tweetResponse: AnyObject? =  NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments, error: nil)
+            
+            if let tweetDict = tweetResponse as? Dictionary<String, AnyObject>{
+                if let errors = tweetDict["errors"] as? Array<Dictionary<String,AnyObject>>{
+                    completion(success: false, result: errors)
+                }
+                else {
+                    self.follower = tweetDict["users"] as! Array<AnyObject>
+                    completion(success: true, result: self.follower as Array<AnyObject>)
+                }
+            }
+            else {
+                completion(success: false, result: nil)
+            }
+        }
+        
     }
     
     func sendTweet(message:String, completion:(success:Bool, message:String?) -> Void)

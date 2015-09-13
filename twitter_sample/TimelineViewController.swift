@@ -24,8 +24,12 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
         super.didReceiveMemoryWarning()
     }
 
+    @IBAction func refresh(sender: AnyObject) {
+        fetchTimeline()
+    }
+    
     @IBAction func tappedMenuButton(sender: AnyObject) {
-        var alertController = UIAlertController(title: "Menu", message: nil, preferredStyle: .ActionSheet)
+        var alertController = UIAlertController(title: "Menu", message: "Select from following", preferredStyle: .ActionSheet)
         
         
         alertController.addAction(UIAlertAction(title: "Edit Profile", style: .Default, handler: {
@@ -43,10 +47,6 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
         alertController.addAction(CanceledAction)
         
         self.presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    @IBAction func refresh(sender: AnyObject) {
-        fetchTimeline()
     }
     
     // MARK: - Table view data source
@@ -82,7 +82,7 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier("showTweetDetailViewController", sender: nil)
+        self.performSegueWithIdentifier("showTweetDetailViewController", sender: indexPath)
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -106,6 +106,19 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
                     self.tableView.reloadData()
                 }
             })
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showTweetDetailViewController" {
+            var vc          = segue.destinationViewController as! TweetDetailViewController
+            var indexPath   = sender as! NSIndexPath
+            vc.id           = indexPath.row
+            vc.serviceManager = serviceManager
+        }
+        if segue.identifier == "showProfileEditViweController" {
+            var vc          = segue.destinationViewController as! ProfileEditViewController
+            vc.screenName   = serviceManager.myAccount().username
         }
     }
 }
