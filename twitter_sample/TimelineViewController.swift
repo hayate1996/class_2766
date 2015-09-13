@@ -7,15 +7,11 @@
 //
 
 import UIKit
-import Social
-import Accounts
 
 class TimelineViewController: UITableViewController, UITableViewDelegate, UITableViewDataSource {
+    let serviceManager = TwitterServiceManager()
 
     let cellIdentifier = "tweetCell"
-    var tweets = []
-    
-    var twAccount = ACAccount()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +24,31 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
         super.didReceiveMemoryWarning()
     }
 
+    @IBAction func tappedMenuButton(sender: AnyObject) {
+        var alertController = UIAlertController(title: "Menu", message: nil, preferredStyle: .ActionSheet)
+        
+        
+        alertController.addAction(UIAlertAction(title: "Edit Profile", style: .Default, handler: {
+            (action) -> Void in
+            self.performSegueWithIdentifier("showProfileEditViweController", sender: nil)
+            
+        }))
+        alertController.addAction(UIAlertAction(title: "Logout", style: .Default, handler: {
+            (action) -> Void in
+            self.navigationController?.popViewControllerAnimated(true)
+        }))
+        
+        
+        let CanceledAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(CanceledAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func refresh(sender: AnyObject) {
+        fetchTimeline()
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -35,7 +56,7 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tweets.count
+        return serviceManager.tweets.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -46,7 +67,7 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
             aCell = UITableViewCell(style: .Default, reuseIdentifier: "tweetCell")
         }
         
-        let tweet = tweets[indexPath.row] as! Dictionary<String,AnyObject>
+        let tweet = serviceManager.tweets[indexPath.row] as! Dictionary<String,AnyObject>
         let text = tweet["text"] as! String
         let user = tweet["user"] as! Dictionary<String,AnyObject>
         let name = user["name"] as! String
@@ -70,75 +91,21 @@ class TimelineViewController: UITableViewController, UITableViewDelegate, UITabl
     
     //  Twitter APIを使ってタイムラインを取得しtweetsに保存する
     func fetchTimeline() {
-        let URL = NSURL(string: "https://api.twitter.com/1.1/statuses/home_timeline.json")
-        
-        let request = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: .GET, URL: URL, parameters: nil)
-        request.account = twAccount
-        
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        refreshControl!.beginRefreshing()
-        
-        request.performRequestWithHandler { (data, response, error:NSError?) -> Void in
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-            self.refreshControl?.endRefreshing()
-            
-            if error != nil {
-                println("Fetching Error: \(error)")
-                return;
-            }
-            
-            var tweetResponse: AnyObject? =  NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments, error: nil)
-            
-            if let tweetDict = tweetResponse as? Dictionary<String, AnyObject>{
-                if let errors = tweetDict["errors"] as? Array<Dictionary<String,AnyObject>>{
-                    var alert = UIAlertController(title: "Error", message: errors[0]["message"] as? String, preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler:nil))
-                    self.presentViewController(alert, animated: true, completion:nil)
+        self.refreshControl?.beginRefreshing()
+        serviceManager.fetchTimeline { (success, message) -> Void in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.refreshControl?.endRefreshing()
+                if success == false {
+                    // ツイート取得失敗
+                    var alertController = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+                    alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler:nil))
+                    self.presentViewController(alertController, animated: true, completion: nil)
                 }
-                
-                return
-            }
-            
-            self.tweets = tweetResponse as! NSArray
-            
-            self.tableView.reloadData()
+                else {
+                    // ツイートの更新
+                    self.tableView.reloadData()
+                }
+            })
         }
-    }
-
-    @IBAction func tappedMenuButton(sender: AnyObject) {
-        var alertController = UIAlertController(title: "Menu", message: nil, preferredStyle: .ActionSheet)
-        
-
-        alertController.addAction(UIAlertAction(title: "Edit Profile", style: .Default, handler: {
-            (action) -> Void in
-            self.performSegueWithIdentifier("showProfileEditViweController", sender: nil)
-            
-        }))
-        alertController.addAction(UIAlertAction(title: "Logout", style: .Default, handler: {
-            (action) -> Void in
-            self.navigationController?.popViewControllerAnimated(true)
-        }))
-
-        
-        let CanceledAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        alertController.addAction(CanceledAction)
-        
-        self.presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showTweetPostViewController" {
-            var vc = segue.destinationViewController as! TweetPostViewController
-            vc.twAccount = self.twAccount
-        }
-        
-        if segue.identifier == "showProfileEditViweController" {
-            var vc = segue.destinationViewController as! ProfileEditViewController
-            vc.twAccount = self.twAccount
-        }
-    }
-    
-    @IBAction func refresh(sender: AnyObject) {
-        fetchTimeline()
     }
 }

@@ -7,16 +7,13 @@
 //
 
 import UIKit
-import Accounts
-import Social
 
 class TweetPostViewController: UIViewController {
+    let serviceManager = TwitterServiceManager()
 
     @IBOutlet var postField: UITextView!
     @IBOutlet var sendButton: UIButton!
     @IBOutlet var cancelButton: UIButton!
-    
-    var twAccount = ACAccount()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,41 +27,19 @@ class TweetPostViewController: UIViewController {
     }
     
     @IBAction func tappedSendButton(sender: AnyObject) {
-        let URL = NSURL(string: "https://api.twitter.com/1.1/statuses/update.json")
-    
-        if count(postField.text) <= 0 {
-            var alert = UIAlertController(title: "Error", message: "Please input text", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler:nil))
-            self.presentViewController(alert, animated: true, completion:nil)
-            
-            return
-        }
-        
-        var params = ["status": postField.text]
-        
-        // リクエストを生成
-        let request = SLRequest(forServiceType: SLServiceTypeTwitter,
-            requestMethod: .POST,
-            URL: URL,
-            parameters: params)
-        
-        // 取得したアカウントをセット
-        request.account = twAccount
-        
-        // APIコールを実行
-        request.performRequestWithHandler { (responseData, urlResponse, error) -> Void in
-            
-            if error != nil {
-                println("error is \(error)")
-            }
-            else {
-                // 結果の表示
-                let result = NSJSONSerialization.JSONObjectWithData(responseData, options: .AllowFragments, error: nil) as! NSDictionary
-                println("result is \(result)")
-            }
-        }
-        
-        self.dismissViewControllerAnimated(true, completion: nil)
+        serviceManager.sendTweet(postField.text, completion: { (success, message) -> Void in
+            dispatch_async(dispatch_get_main_queue(), {
+                if success == false {
+                    var alert = UIAlertController(title: "Error", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler:nil))
+                    
+                    self.presentViewController(alert, animated: true, completion:nil)
+                }
+                else {
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }
+            })
+        })
     }
     
     @IBAction func tappedCancelButton(sender: AnyObject) {
