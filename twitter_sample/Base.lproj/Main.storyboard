@@ -415,7 +415,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="m7d-GT-gQc" kind="show" identifier="showFollowerViewController" id="vzn-HQ-U4b"/>
+                                    <segue destination="m7d-GT-gQc" kind="show" identifier="" id="vzn-HQ-U4b"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KWb-iH-RHM">
@@ -425,7 +425,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="lV4-vs-QBM" kind="show" identifier="showFollowingViewController" id="WPQ-bi-2MT"/>
+                                    <segue destination="lV4-vs-QBM" kind="show" identifier="" id="WPQ-bi-2MT"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DIr-mB-jg8">
@@ -495,7 +495,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="e8e-Tz-7od" kind="show" identifier="showProfileEditViweController" id="RZl-GV-MA4"/>
+                                    <segue destination="e8e-Tz-7od" kind="show" identifier="" id="RZl-GV-MA4"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -515,6 +515,6 @@
         <image name="twitter_icon" width="73" height="73"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="l8R-fR-3bb"/>
+        <segue reference="RZl-GV-MA4"/>
     </inferredMetricsTieBreakers>
 </document>
